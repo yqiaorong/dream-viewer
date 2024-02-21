@@ -68,7 +68,7 @@ Step 2: run the following:
 
 * encoding_ZW_REM.py (This file trains the EEG encoding model on THINGS EEG2 dataset and tests the EEG encoding model on REM dreams Zhang & Wamsley dataset using the 'spatial correlation method'. The correlation scores of each dream is saved.)
 
-* corr_ZW_REM_fs.py (This file trains the EEG encoding model on THINGS EEG2 dataset and tests the EEG encoding model on REM dreams Zhang & Wamsley dataset using the 'spatial correlation method' with extra feature selections.)
+* encoding_ZW_REM_fs.py (This file trains the EEG encoding model on THINGS EEG2 dataset and tests the EEG encoding model on REM dreams Zhang & Wamsley dataset using the 'spatial correlation method' with extra feature selections.)
 
 ### 04_plots
 
@@ -91,4 +91,3 @@ No needs to run the following scripts.
 * sorting_ZW.py (THis file sorts all metadata of dreams with feature maps.)
 
 * sorting_ZW_REMs.py (THis file sorts all metadata of REM dreams with feature maps.)
- 

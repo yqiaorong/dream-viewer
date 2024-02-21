@@ -9,7 +9,7 @@ from collections import OrderedDict
 # =============================================================================
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--project_dir', default='../project_directory', type=str)
+parser.add_argument('--project_dir', default='project_directory', type=str)
 args = parser.parse_args()
 
 # =============================================================================
@@ -98,5 +98,9 @@ for idx, row in df.iterrows():
 df['number_of_images'] = num_occur
 
 # Save the dataframe
-df.to_excel(os.path.join(args.project_dir, 'results', 'Zhang_Wamsley', 
-                         'df.xlsx'), index=False)
+# Create the saving directory
+save_dir = os.path.join(args.project_dir,'results', 
+                        f'Zhang_Wamsley_correlation')
+if os.path.isdir(save_dir) == False:
+    os.makedirs(save_dir)
+df.to_excel(os.path.join(save_dir, 'df.xlsx'), index=False)

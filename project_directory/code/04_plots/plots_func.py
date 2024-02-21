@@ -2,7 +2,6 @@ def plot_single(args, times, correlations, dream_name, match_idx):
     import os
     from matplotlib import pyplot as plt
 
-    print(dream_name)
     # The total number of images
     num_img = correlations.shape[0]
     
@@ -33,12 +32,12 @@ def plot_single(args, times, correlations, dream_name, match_idx):
 
         # Save the figures
         if img_idx in match_idx:
-            print('True', img_idx)
-            save_dir = os.path.join(args.project_dir, 'results', args.test_dataset, 
+            # print('True', img_idx)
+            save_dir = os.path.join(args.project_dir, 'results', f'{args.test_dataset}_correlation',
                                     'correlation_plots_'+args.st, 'raw_plots', dream_name, 'match')
         else:
-            print('False', img_idx)
-            save_dir = os.path.join(args.project_dir, 'results', args.test_dataset, 
+            # print('False', img_idx)
+            save_dir = os.path.join(args.project_dir, 'results', f'{args.test_dataset}_correlation', 
                                     'correlation_plots_'+args.st,'raw_plots', dream_name, 'unmatch')
         if os.path.isdir(save_dir) == False:
             os.makedirs(save_dir)
@@ -52,7 +51,6 @@ def plot_match(args, times, correlations, dream_name, match_idx):
     import numpy as np
     from matplotlib import pyplot as plt
 
-    print(dream_name)
     # The total number of images
     num_img = correlations.shape[0]
     
@@ -87,7 +85,7 @@ def plot_match(args, times, correlations, dream_name, match_idx):
     fig.suptitle(f"Correlation scores of {dream_name} (match)")
 
     # Save the figures
-    save_dir = os.path.join(args.project_dir, 'results', args.test_dataset, 
+    save_dir = os.path.join(args.project_dir, 'results', f'{args.test_dataset}_correlation',
                                 'correlation_plots_'+args.st, 'raw_plots', dream_name, 'match')
     if os.path.isdir(save_dir) == False:
         os.makedirs(save_dir)
@@ -101,7 +99,6 @@ def plot_unmatch(args, times, correlations, dream_name, match_idx):
     import numpy as np
     from matplotlib import pyplot as plt
 
-    print(dream_name)
     # The total number of images
     num_img = correlations.shape[0]
     
@@ -136,7 +133,7 @@ def plot_unmatch(args, times, correlations, dream_name, match_idx):
     fig.suptitle(f"Correlation scores of {dream_name} (unmatch)")
 
     # Save the figures
-    save_dir = os.path.join(args.project_dir, 'results', args.test_dataset, 
+    save_dir = os.path.join(args.project_dir, 'results', f'{args.test_dataset}_correlation',
                                 'correlation_plots_'+args.st, 'raw_plots', dream_name, 'unmatch')
     if os.path.isdir(save_dir) == False:
         os.makedirs(save_dir)
@@ -180,7 +177,7 @@ def hist(args, scores_dir, dream_name):
     plt.legend(loc='best')
 
     # Save the figures
-    save_dir = os.path.join(args.project_dir, 'results', args.test_dataset, 
+    save_dir = os.path.join(args.project_dir, 'results', f'{args.test_dataset}_correlation',
                                 'correlation_plots_'+args.st, 'histograms')
     if os.path.isdir(save_dir) == False:
         os.makedirs(save_dir)

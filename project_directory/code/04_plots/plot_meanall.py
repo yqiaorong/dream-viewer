@@ -9,7 +9,7 @@ from matplotlib import pyplot as plt
 # =============================================================================
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--project_dir',default='../project_directory', type=str)
+parser.add_argument('--project_dir',default='project_directory', type=str)
 parser.add_argument('--test_dataset',default='Zhang_Wamsley',type=str)
 parser.add_argument('--percentile',default=0.95, type=float)
 parser.add_argument('--st',default='s', type=str)
@@ -26,7 +26,7 @@ for key, val in vars(args).items():
 # =============================================================================
 
 # Load the directory
-scores_dir = os.path.join(args.project_dir, 'results', args.test_dataset, 
+scores_dir = os.path.join(args.project_dir, 'results', f'{args.test_dataset}_correlation',
 						'correlation_scores_'+args.st)
 scores_list = os.listdir(scores_dir)
 mean_all = []
@@ -66,7 +66,7 @@ plt.ylabel('frequency')
 plt.legend(loc='best')
 
 # Save the figures
-save_dir = os.path.join(args.project_dir, 'results', args.test_dataset, 
+save_dir = os.path.join(args.project_dir, 'results', f'{args.test_dataset}_correlation',
                             'correlation_plots_'+args.st)
 if os.path.isdir(save_dir) == False:
     os.makedirs(save_dir)
@@ -96,7 +96,7 @@ plt.ylabel('frequency')
 plt.legend(loc='best')
 
 # Save the figures
-save_dir = os.path.join(args.project_dir, 'results', args.test_dataset, 
+save_dir = os.path.join(args.project_dir, 'results', f'{args.test_dataset}_correlation',
                             'correlation_plots_'+args.st)
 if os.path.isdir(save_dir) == False:
     os.makedirs(save_dir)
