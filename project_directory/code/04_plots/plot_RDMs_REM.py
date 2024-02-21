@@ -10,11 +10,12 @@ from sklearn.preprocessing import normalize
 # =============================================================================
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--project_dir',default='../project_directory',type=str)
+parser.add_argument('--project_dir',default='project_directory',type=str)
 parser.add_argument('--dnn',default='alexnet',type=str)
 parser.add_argument('--test_dataset',default='Zhang_Wamsley',type=str)
-parser.add_argument('--dream_idx',default=0, type=int)
+parser.add_argument('--all_or_best', default='all', type=str)
 parser.add_argument('--feature_selection',default=False,type=bool)
+parser.add_argument('--st',default='s', type=str)
 args = parser.parse_args()
 
 print(f'>>> Plot the RDMs of {args.test_dataset} <<<')
@@ -26,13 +27,13 @@ for key, val in vars(args).items():
 # Load correlation results
 # =============================================================================
 
-ZW_dir = os.path.join(args.project_dir, 'eeg_dataset', 'dream_data', 'Zhang_Wamsley')
+ZW_dir = os.path.join(args.project_dir, 'results', 'Zhang_Wamsley_correlation')
 
 # Dream correlation scores list
 if args.feature_selection == True:
-	ZW_corr_dir = os.path.join(ZW_dir, 'REMs', 'results', 'correlation_scores_sf')
+	ZW_corr_dir = os.path.join(ZW_dir, f'{args.all_or_best}_REMs_correlation_scores_s')
 else:
-    ZW_corr_dir = os.path.join(ZW_dir, 'REMs', 'results', 'correlation_scores_s')
+    ZW_corr_dir = os.path.join(ZW_dir,  f'{args.all_or_best}_REMs_correlation_scores_s_with_feature_selection')
 dreams_corrs = os.listdir(ZW_corr_dir)
 
 # Load correlation scores
@@ -51,9 +52,18 @@ RDMs = np.array(RDMs)
 print(RDMs.shape)
 
 # Dream images list
-ZW_img_dir = os.path.join(ZW_dir, 'REMs','images')
+ZW_img_dir = os.path.join(args.project_dir, 'eeg_dataset','dream_data', 'Zhang_Wamsley', 
+						  f'REMs_{args.all_or_best}', 'images')
 dreams = os.listdir(ZW_img_dir)
 
+# =============================================================================
+# Save directory
+# =============================================================================
+
+save_dir = os.path.join(args.project_dir, 'results', f'{args.test_dataset}_correlation',
+                            f'{args.all_or_best}_REMs_correlation_plots_'+args.st, 'RDMs')
+if os.path.isdir(save_dir) == False:
+    os.makedirs(save_dir)
 	
 # =============================================================================
 # Plot the full RDMs
@@ -70,16 +80,17 @@ cbar.set_label('Values')
 for i in range(RDMs.shape[0]):
 	plt.plot([0, RDMs.shape[1]], [i,i], 'k--', lw=0.4)
 
-print(img_indice)
 # Vertical borders
 for img in img_indice:
 	plt.plot([int(img[-1]+1),int(img[-1]+1)], [0, RDMs.shape[0]], 'k--', lw=0.4)
 
 plt.xlabel('Images')
 plt.ylabel('Dreams')
-plt.title(f'REMs RDMs')
+plt.title(f'full unnormalized REMs_{args.all_or_best} RDMs')
 fig.tight_layout()
-plt.show()
+plt.savefig(os.path.join(save_dir, f'full unnormalized REMs_{args.all_or_best} RDMs'))
+
+
 
 # =============================================================================
 # Plot the max RDMs
@@ -92,8 +103,8 @@ for v in range(RDMs.shape[0]):
 		# print(len(RDMs[v, img_indice[h][0]:int(img_indice[h][-1]+1)]))
 		# print(f'({v},{h}): {img_indice[h][0]}, {int(img_indice[h][-1]+1)}')
 		max_RDMs[v,h] = max(RDMs[v, img_indice[h][0]:int(img_indice[h][-1]+1)])
-		if h == v:
-			print(RDMs[v, img_indice[h][0]:int(img_indice[h][-1]+1)])
+		# if h == v:
+		# 	print(RDMs[v, img_indice[h][0]:int(img_indice[h][-1]+1)])
 
 # Normalization
 norm_max_RDMs = normalize(max_RDMs)
@@ -110,10 +121,9 @@ plt.xlim([0,RDMs.shape[0]])
 plt.ylim([0,RDMs.shape[0]])
 plt.xlabel('Images')
 plt.ylabel('Dreams')
-plt.title(f'max REMs RDMs')
-
+plt.title(f'max unnormalized REMs_{args.all_or_best} RDMs')
 fig.tight_layout()
-plt.show()
+plt.savefig(os.path.join(save_dir, f'max unnormalized REMs_{args.all_or_best} RDMs'))
 
 # Plot normalized maximum RDMs
 fig = plt.figure(figsize=(6, 5))
@@ -127,7 +137,6 @@ plt.xlim([0,RDMs.shape[0]])
 plt.ylim([0,RDMs.shape[0]])
 plt.xlabel('Images')
 plt.ylabel('Dreams')
-plt.title(f'normalized max REMs RDMs')
-
+plt.title(f'max normalized REMs_{args.all_or_best} RDMs')
 fig.tight_layout()
-plt.show()
+plt.savefig(os.path.join(save_dir, f'max normalized REMs_{args.all_or_best} RDMs'))

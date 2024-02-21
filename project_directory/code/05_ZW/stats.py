@@ -9,7 +9,7 @@ import pandas as pd
 # =============================================================================
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--project_dir',default='../project_directory', type=str)
+parser.add_argument('--project_dir',default='project_directory', type=str)
 parser.add_argument('--test_dataset',default='Zhang_Wamsley',type=str)
 parser.add_argument('--percentile',default=0.95, type=float)
 parser.add_argument('--st',default='s', type=str)
@@ -26,7 +26,7 @@ for key, val in vars(args).items():
 # =============================================================================
 
 # Load the directory
-scores_dir = os.path.join(args.project_dir, 'results', args.test_dataset, 
+scores_dir = os.path.join(args.project_dir, 'results', f'{args.test_dataset}_correlation', 
 						'correlation_plots_'+args.st)
 
 scores = np.load(os.path.join(scores_dir, '0.95_significant_r_scores.npy'),
@@ -117,6 +117,6 @@ df = pd.DataFrame({'Last sleep stage':[0,1,2,3,5],
                    'No mean decoding': [N0_mno, N1_mno, N2_mno, N3_mno, N5_mno]})
 print(df)
 # Save the dataframe
-df.to_excel(os.path.join(args.project_dir, 'results', 'Zhang_Wamsley', 
+df.to_excel(os.path.join(args.project_dir, 'results', f'{args.test_dataset}_correlation',
                          'correlation_plots_'+args.st, str(args.percentile)+'_decoding_stats.xlsx'), 
                          index=False)

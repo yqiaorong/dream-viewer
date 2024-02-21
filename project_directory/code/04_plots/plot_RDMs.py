@@ -11,10 +11,9 @@ from sklearn.preprocessing import normalize
 # =============================================================================
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--project_dir',default='../project_directory', type=str)
+parser.add_argument('--project_dir',default='project_directory', type=str)
 parser.add_argument('--dnn',default='alexnet',type=str)
 parser.add_argument('--test_dataset',default='Zhang_Wamsley',type=str)
-parser.add_argument('--dream_idx',default=0, type=int)
 parser.add_argument('--st',default='s', type=str)
 args = parser.parse_args()
 
@@ -28,7 +27,7 @@ for key, val in vars(args).items():
 # =============================================================================
 
 # Dream correlation scores list
-ZW_corr_dir = os.path.join(args.project_dir, 'results', args.test_dataset, 
+ZW_corr_dir = os.path.join(args.project_dir, 'results', f'{args.test_dataset}_correlation',
                         'correlation_scores_'+args.st)
 dreams_corrs = os.listdir(ZW_corr_dir)
 
@@ -47,13 +46,22 @@ ZW_img_dir = os.path.join(args.project_dir, 'eeg_dataset', 'dream_data',
 						  'Zhang_Wamsley', 'images')
 dreams_imgs = os.listdir(ZW_img_dir)
 dreams_imgs = [s[6:].split('_')[0] for s in dreams_imgs]
-	
+
+# =============================================================================
+# Save directory
+# =============================================================================
+
+save_dir = os.path.join(args.project_dir, 'results', f'{args.test_dataset}_correlation',
+                            'correlation_plots_'+args.st, 'RDMs')
+if os.path.isdir(save_dir) == False:
+    os.makedirs(save_dir)
+
 # =============================================================================
 # Plot the full RDMs
 # =============================================================================
 
 # Load df
-df = pd.read_excel('../project_directory/results/Zhang_Wamsley/df.xlsx')
+df = pd.read_excel('project_directory/results/Zhang_Wamsley_correlation/df.xlsx')
 non_nah_elements = [i for i in df['number_of_images'] if i != 'nah' and i != '-']
 
 fig = plt.figure(figsize=(10, 4))
@@ -83,10 +91,10 @@ plt.xlim([0,int(len(dreams_corrs[:30])*8)])
 plt.ylim([0,int(len(dreams_corrs[:30]))])
 plt.xlabel('Images')
 plt.ylabel('Dreams')
-plt.title(f'unnormalized RDMs')
-
+plt.title(f'full unnormalized RDMs')
+plt.savefig(os.path.join(save_dir, 'full unnormalized RDMs'))
 fig.tight_layout()
-plt.show()
+
 
 # =============================================================================
 # Plot the max RDMs
@@ -121,6 +129,6 @@ plt.ylim([0,len(dreams_corrs)])
 plt.xlabel('Images')
 plt.ylabel('Dreams')
 plt.title(f'max normalized RDMs')
-
+plt.savefig(os.path.join(save_dir, 'max normalized RDMs'))
 fig.tight_layout()
 plt.show()

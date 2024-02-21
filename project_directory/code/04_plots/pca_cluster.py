@@ -22,6 +22,8 @@ from sklearn.decomposition import KernelPCA
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--project_dir',default='project_directory', type=str)
+parser.add_argument('--test_dataset',default='Zhang_Wamsley',type=str)
+parser.add_argument('--all_or_best', default='all', type=str)
 args = parser.parse_args()
 
 print(f'>>> Apply PCA and clustering on Zhang & Wamsley REM EEG <<<')
@@ -36,7 +38,7 @@ for key, val in vars(args).items():
 
 # Load the directory
 ZW_eeg_dir = os.path.join(args.project_dir, 'eeg_dataset', 'dream_data', 
-                        'Zhang_Wamsley', 'REMs', 'preprocessed_data')
+                        'Zhang_Wamsley', f'REMs_{args.all_or_best}', 'preprocessed_data')
 ZW_eeg_list = os.listdir(ZW_eeg_dir)
 
 # Standardize the data
@@ -94,12 +96,18 @@ print(kmeans.labels_)
 # Plot
 # =============================================================================
 
+# Create save directory
+save_dir = os.path.join(args.project_dir, 'results', f'{args.test_dataset}_correlation',
+                            f'{args.all_or_best}_REMs_correlation_plots_s')
+if os.path.isdir(save_dir) == False:
+    os.makedirs(save_dir)
+
 colours = ['firebrick', 'salmon', 'orange', 'gold', 'palegreen', 'yellowgreen',
            'forestgreen', 'lightskyblue', 'cornflowerblue', 'mediumpurple', 'hotpink' ]
 
 fig = plt.figure(figsize=(6, 6))
-plt.title('REM dreams clusters')
+plt.title(f'{args.all_or_best}_REM dreams clusters')
 for i, name in enumerate(ZW_eeg_list):
     plt.scatter(pca_eegs[i,0], pca_eegs[i,1], color=colours[i], label=name[6:-4]+'_'+str(i))
 plt.legend()
-plt.show()
+plt.savefig(os.path.join(save_dir, f'{args.all_or_best}_REM dreams clusters'))

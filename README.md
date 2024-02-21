@@ -74,22 +74,22 @@ Step 2: run the following:
 
 ### 04_plots
 
+* pca_cluster.py --all_or_best (This file plots the clusters of dreams.)
+
 * plot.py (This file plots the correlation scores for individual dream.)
 
 * plot_hist.py (This file plots the histogram of correlation scores for all dream.)
 
+* plot_meanall.py (This file plots the statistical decoding results from all dreams.)
+
 * plot_RDMs.py (This file plots the RDMs of dreams with feature maps.)
 
-* plot_RDMs_REM.py (This file plots the RDMs of REM dreams with feature maps.)
-
-* plot_stages.py (This file plots the statistical decoding results from all dreams with different sleep stages.)
-
-* plot_meanall.py (This file plots the statistical decoding results from all dreams.)
+* plot_RDMs_REM.py --all_or_best (This file plots the RDMs of REM dreams with feature maps.)
 
 ### 05_ZW
 
 No needs to run the following scripts.
 
-* sorting_ZW.py (THis file sorts all metadata of dreams with feature maps.)
+* stats.py (This file produces the statistical decoding results from all dreams with different sleep stages.)
 
-* sorting_ZW_REMs.py (THis file sorts all metadata of REM dreams with feature maps.)
+* run_all_REMs --feature_selection --all_or_best (This file runs the alexnet, pca, encoding, RDMs and clusters of REM dreams.)
