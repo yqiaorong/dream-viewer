@@ -28,9 +28,10 @@ from PIL import Image
 parser = argparse.ArgumentParser()
 parser.add_argument('--pretrained', default=True, type=bool)
 parser.add_argument('--project_dir', default='project_directory', type=str)
+parser.add_argument('--all_or_best', default='all', type=str)
 args = parser.parse_args()
 
-print('Extract Zhang & Wamsley dream images feature maps AlexNet <<<')
+print(f'Extract Zhang & Wamsley {args.all_or_best} REM dream images feature maps AlexNet <<<')
 print('\nInput arguments:')
 for key, val in vars(args).items():
 	print('{:16} {}'.format(key, val))
@@ -100,7 +101,7 @@ centre_crop = trn.Compose([
 
 # The image directory
 img_set_dir = os.path.join(args.project_dir,'eeg_dataset','dream_data',
-						   'Zhang_Wamsley','REMs','images')
+							'Zhang_Wamsley',f'REMs_{args.all_or_best}','images')
 img_partitions = os.listdir(img_set_dir)
 for p in img_partitions:
 	part_dir = os.path.join(img_set_dir, p)
@@ -113,7 +114,7 @@ for p in img_partitions:
 
 	# Create the saving directory if not existing
 	save_dir = os.path.join(args.project_dir,'eeg_dataset','dream_data',
-						    'Zhang_Wamsley','REMs','dnn_feature_maps',
+						    'Zhang_Wamsley',f'REMs_{args.all_or_best}','dnn_feature_maps',
 							'full_feature_maps','alexnet',
 						 'pretrained-'+str(args.pretrained), p)
 	if os.path.isdir(save_dir) == False:

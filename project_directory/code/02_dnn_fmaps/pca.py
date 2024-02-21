@@ -28,7 +28,7 @@ from pca_func import train_scaler_pca, apply_scaler_pca
 # Input arguments
 # =============================================================================
 parser = argparse.ArgumentParser()
-parser.add_argument('--project_dir', default='../project_directory', type=str)
+parser.add_argument('--project_dir', default='project_directory', type=str)
 parser.add_argument('--dataset', default='Zhang_Wamsley', type=str)
 parser.add_argument('--dnn', default='alexnet', type=str)
 parser.add_argument('--pretrained', default=True, type=bool)
@@ -54,15 +54,11 @@ scaler, pca, all_layers, layer_names = train_scaler_pca(args)
 # =============================================================================
 if args.dataset == 'THINGS_EEG2':
     apply_scaler_pca(args, 'test', scaler, pca)
-if args.dataset == 'SCIP':
-    img_categories = ['cartoonflowers', 'cartoonguitar', 'cartoonpenguins']
-    for img_category in img_categories:
-        apply_scaler_pca(args, img_category, scaler, pca)
-if args.dataset == 'Zhang_Wamsley':
+elif args.dataset == 'Zhang_Wamsley':
     apply_scaler_pca(args, 'dreams', scaler, pca)
-if args.dataset == 'ZW_REMs':
+elif args.dataset == 'ZW_REMs_all' or args.dataset == 'ZW_REMs_best':
     dir = os.path.join(args.project_dir, 'eeg_dataset', 'dream_data', 'Zhang_Wamsley',
-                    'REMs','dnn_feature_maps', 'full_feature_maps',args.dnn,
+                    args.dataset[3:],'dnn_feature_maps', 'full_feature_maps',args.dnn,
                     'pretrained-'+str(args.pretrained))
     img_categories = os.listdir(dir)
     for img_category in img_categories:

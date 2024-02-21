@@ -162,17 +162,13 @@ def apply_scaler_pca(args, img_category, scaler, pca):
         fmaps_dir = os.path.join(args.project_dir,'eeg_dataset','wake_data',args.dataset,
                                 'dnn_feature_maps','full_feature_maps',args.dnn,
                                 'pretrained-'+str(args.pretrained),img_category+'_images')
-    elif args.dataset == 'SCIP':
-        fmaps_dir = os.path.join(args.project_dir,'eeg_dataset','wake_data',args.dataset,
-                                'dnn_feature_maps','full_feature_maps',args.dnn,
-                                'pretrained-'+str(args.pretrained),img_category)
     elif args.dataset == 'Zhang_Wamsley':
         fmaps_dir = os.path.join(args.project_dir,'eeg_dataset','dream_data',args.dataset,
                                 'dnn_feature_maps','full_feature_maps',args.dnn,
                                 'pretrained-'+str(args.pretrained),img_category)
-    elif args.dataset == 'ZW_REMs':
+    elif args.dataset == 'ZW_REMs_all' or args.dataset == 'ZW_REMs_best':
         fmaps_dir = os.path.join(args.project_dir,'eeg_dataset','dream_data','Zhang_Wamsley',
-                                'REMs','dnn_feature_maps','full_feature_maps',args.dnn,
+                                args.dataset[3:],'dnn_feature_maps','full_feature_maps',args.dnn,
                                 'pretrained-'+str(args.pretrained),img_category)
     fmaps_list = os.listdir(fmaps_dir)
     fmaps_list.sort()
@@ -211,7 +207,7 @@ def apply_scaler_pca(args, img_category, scaler, pca):
         fmaps_test[dnn_layer] = pca[l].transform(fmaps_test[dnn_layer])
 
     ### Save the downsampled feature maps ###
-    if args.dataset == 'THINGS_EEG2' or args.dataset == 'SCIP':
+    if args.dataset == 'THINGS_EEG2':
         save_dir = os.path.join(args.project_dir,'eeg_dataset','wake_data',args.dataset,
                                 'dnn_feature_maps','pca_feature_maps', args.dnn, 
                                 'pretrained-'+str(args.pretrained), 'layers-'+args.layers)
@@ -219,9 +215,9 @@ def apply_scaler_pca(args, img_category, scaler, pca):
         save_dir = os.path.join(args.project_dir,'eeg_dataset','dream_data',args.dataset,
                                 'dnn_feature_maps','pca_feature_maps', args.dnn, 
                                 'pretrained-'+str(args.pretrained), 'layers-'+args.layers) 
-    elif args.dataset == 'ZW_REMs':
+    elif args.dataset == 'ZW_REMs_all' or args.dataset == 'ZW_REMs_best':
         save_dir = os.path.join(args.project_dir,'eeg_dataset','dream_data','Zhang_Wamsley',
-                                'REMs','dnn_feature_maps','pca_feature_maps', args.dnn, 
+                                args.dataset[3:],'dnn_feature_maps','pca_feature_maps', args.dnn, 
                                 'pretrained-'+str(args.pretrained), 'layers-'+args.layers)       
     if os.path.isdir(save_dir) == False:
         os.makedirs(save_dir)
