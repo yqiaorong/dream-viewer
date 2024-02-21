@@ -50,11 +50,13 @@ The files ended with '_func.py' have no needs to be run.
 
 * corr_ZW_s.py (This file computes the correlation scores of dreams in ZHang & Wamsley dataset using the 'spatial correlation method'.)
 
-### 04_dnn_fmaps
+### 02_dnn_fmaps
 
 * alexnet_THINGS.py (This file extracts dnn alexnet feature maps from THINGS images.)
 
 * alexnet_ZW.py (This file extracts dnn alexnet feature maps from Zhang & Wamsley images.)
+
+* alexnet_ZW.py (This file extracts dnn alexnet feature maps from Zhang & Wamsley REM images.)
 
 * pca.py (This file applies StandardScaler and PCA on the full feature maps.)
 
