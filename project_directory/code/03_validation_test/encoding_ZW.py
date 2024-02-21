@@ -14,8 +14,6 @@ test_dataset : str
 import os
 import argparse
 import numpy as np
-import pingouin as pg
-from tqdm import tqdm
 from matplotlib import pyplot as plt
 
 from encoding_func import model_ZW
@@ -25,7 +23,7 @@ from encoding_func import model_ZW
 # Input arguments
 # =============================================================================
 parser = argparse.ArgumentParser()
-parser.add_argument('--project_dir',default='../project_directory', type=str)
+parser.add_argument('--project_dir',default='project_directory', type=str)
 parser.add_argument('--dnn',default='alexnet',type=str)
 parser.add_argument('--test_dataset',default='Zhang_Wamsley',type=str)
 args = parser.parse_args()
@@ -56,7 +54,6 @@ dreams_imgs = [s[6:].split('_')[0] for s in dreams_imgs]
 dreams_eegs_idx = [idx for idx, item in enumerate(dreams_eegs) if item in 
                    dreams_imgs]
 print('The total number of dreams with feature maps: ', len(dreams_eegs_idx))
-print(dreams_eegs_idx)
 
 # The list of indices of dream images of dreams
 dreams_imgs_idx = []
@@ -77,6 +74,12 @@ mean_scores = np.mean(scores, 0)
 # =============================================================================
 # Plot the correlation results
 # =============================================================================
+
+# Create the saving directory
+save_dir = os.path.join(args.project_dir, 'results', f'{args.test_dataset}_validation_test')
+if os.path.isdir(save_dir) == False:
+    os.makedirs(save_dir)
+
 times = np.linspace(-int(t/100),0,t)
 
 plt.figure(figsize=(10,4))
@@ -86,6 +89,6 @@ plt.xlabel('Time (s)')
 plt.xlim(left=-int(t/100), right=0)
 plt.ylabel('Pearson\'s $r$')
 plt.ylim(bottom=-.1, top=.1)
-plt.title(f'Encoding accuracy on Zhang & Wamsley (alexnet)')
+plt.title(f'Averaged encoding accuracy on {args.test_dataset} ({args.dnn}))')
 plt.legend(loc='best')
-plt.show()
+plt.savefig(os.path.join(save_dir, f'Averaged encoding accuracy on {args.test_dataset} ({args.dnn}).jpg'))
