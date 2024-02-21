@@ -117,7 +117,7 @@ for e, item in enumerate(dreams_eegs_names):
 
     # Create the saving directory
     save_dir = os.path.join(args.project_dir, 'results', f'{args.test_dataset}_correlation',
-                            f'{args.all_or_best}_REM_correlation_scores_s')
+                            f'{args.all_or_best}_REMs_correlation_scores_s')
     if os.path.isdir(save_dir) == False:
         os.makedirs(save_dir)
     file_name = item[6:]
