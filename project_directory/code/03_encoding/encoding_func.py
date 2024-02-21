@@ -1,3 +1,76 @@
+def train_model_THINGS2(args):
+    """The function trains the encoding model using LogisticRegression. X train 
+    is THINGS2 dnn feature maps and Y train is the real THINGS EEG2 training 
+    data.
+    
+    Parameters
+    ----------
+    args : Namespace
+        Input arguments.
+
+    Returns
+    ----------
+    reg: The trained LogisticRegression model.
+    """
+
+    import os
+    import numpy as np
+    from tqdm import tqdm
+    from sklearn.linear_model import LinearRegression
+
+    ### Load the training DNN feature maps ###
+    # Load the training DNN feature maps directory
+    dnn_train_dir = os.path.join(args.project_dir, 'eeg_dataset', 'wake_data', 
+                                    'THINGS_EEG2', 'dnn_feature_maps', 'pca_feature_maps', 
+                                    args.dnn, 'pretrained-True', 'layers-all')
+    # Load the training DNN feature maps (16540, 3000)
+    dnn_fmaps_train = np.load(os.path.join(dnn_train_dir, 'pca_feature_maps_training.npy'), 
+                                allow_pickle=True).item()
+
+    ### Load the training EEG data ###
+    # Load the THINGS2 training EEG data directory
+    eeg_train_dir = os.path.join(args.project_dir, 'eeg_dataset', 'wake_data', 
+                                    'THINGS_EEG2','preprocessed_data')
+    # Iterate over THINGS2 subjects
+    eeg_data_train = []
+    for train_subj in tqdm(range(1,11), desc='THINGS2 subjects'):
+        # Load the THINGS2 training EEG data
+        data = np.load(os.path.join(eeg_train_dir,'sub-'+format(train_subj,'02'),
+                    'preprocessed_eeg_training.npy'), allow_pickle=True).item()
+        # Get the THINGS2 training channels and times
+        if train_subj == 1:
+            train_ch_names = data['ch_names']
+        else:
+            pass
+        # Average the training EEG data across repetitions (16540,17,100)
+        data = np.mean(data['preprocessed_eeg_data'], 1)
+
+        if args.test_dataset == 'Zhang_Wamsley':
+            # Crop the training EEG data between 0.1 and 0.25s (16540,17,15)
+            data = data[:,:,30:45]
+            # Average the training EEG data across time (16540,17)
+            data = np.mean(data,axis=2)
+            # Remove the EEG data from 'POz' channel (16540,16)
+            POz_idx = train_ch_names.index('POz')
+            data = np.delete(data,POz_idx,axis=1)
+        elif args.test_dataset == 'THINGS_EEG1':
+            # Reshape the training EEG data
+            # THINGS_EEG1 (16540, 17 x 100) / Zhang_Wamsley (16540, 16 x 100)
+            data = np.reshape(data, (data.shape[0],-1))
+        # Append individual data
+        eeg_data_train.append(data)
+        del data
+    # Average the training EEG data across subjects : (16540,16)
+    eeg_data_train = np.mean(eeg_data_train,0)
+    print('eeg_data_train shape', eeg_data_train.shape)
+    # Delete unused channel names
+    del train_ch_names
+
+    ### Train the encoding model ###
+    # Train the encoding models
+    reg = LinearRegression().fit(dnn_fmaps_train['all_layers'],eeg_data_train)
+    return reg
+
 def corr_THINGS1(args, pred_eeg_data_test, test_subj):
     """The function tests the encoding model by correlating the predicted EEG 
     test data with real EEG test data.
@@ -117,78 +190,63 @@ def corr_ZW_spatial(args, pred_eeg_data_test, eeg_idx, img_idx, crop_t, REM=Fals
     ### Output ###
     return corr_score, mean_score
 
-def train_model_THINGS2(args):
-    """The function trains the encoding model using LogisticRegression. X train 
-    is THINGS2 dnn feature maps and Y train is the real THINGS EEG2 training 
-    data.
-    
+def feature_selection(args, feature_maps_train, eeg_data_train):
+    """The function reduces the dimension of features, trains and tests the 
+    encoding model. 
+
     Parameters
     ----------
     args : Namespace
         Input arguments.
+    feature_maps_train: array with shape (samples, features)
+        The dnn training feature maps. 
+    eeg_data_train : array with shape (samples, 1)
+        The training EEG data.
 
     Returns
     ----------
-    reg: The trained LogisticRegression model.
+    pred_eeg : array with shape (samples,)
+        The predicted EEG data. 
     """
-
+    
     import os
     import numpy as np
-    from tqdm import tqdm
     from sklearn.linear_model import LinearRegression
+    from sklearn.feature_selection import SelectKBest, f_regression
 
-    ### Load the training DNN feature maps ###
-    # Load the training DNN feature maps directory
-    dnn_train_dir = os.path.join(args.project_dir, 'eeg_dataset', 'wake_data', 
-                                    'THINGS_EEG2', 'dnn_feature_maps', 'pca_feature_maps', 
-                                    args.dnn, 'pretrained-True', 'layers-all')
-    # Load the training DNN feature maps (16540, 3000)
-    dnn_fmaps_train = np.load(os.path.join(dnn_train_dir, 'pca_feature_maps_training.npy'), 
-                                allow_pickle=True).item()
-
-    ### Load the training EEG data ###
-    # Load the THINGS2 training EEG data directory
-    eeg_train_dir = os.path.join(args.project_dir, 'eeg_dataset', 'wake_data', 
-                                    'THINGS_EEG2','preprocessed_data')
-    # Iterate over THINGS2 subjects
-    eeg_data_train = []
-    for train_subj in tqdm(range(1,11), desc='THINGS2 subjects'):
-        # Load the THINGS2 training EEG data
-        data = np.load(os.path.join(eeg_train_dir,'sub-'+format(train_subj,'02'),
-                    'preprocessed_eeg_training.npy'), allow_pickle=True).item()
-        # Get the THINGS2 training channels and times
-        if train_subj == 1:
-            train_ch_names = data['ch_names']
-        else:
-            pass
-        # Average the training EEG data across repetitions (16540,17,100)
-        data = np.mean(data['preprocessed_eeg_data'], 1)
-
-        if args.test_dataset == 'Zhang_Wamsley':
-            # Crop the training EEG data between 0.1 and 0.25s (16540,17,15)
-            data = data[:,:,30:45]
-            # Average the training EEG data across time (16540,17)
-            data = np.mean(data,axis=2)
-            # Remove the EEG data from 'POz' channel (16540,16)
-            POz_idx = train_ch_names.index('POz')
-            data = np.delete(data,POz_idx,axis=1)
-        elif args.test_dataset == 'THINGS_EEG1':
-            # Reshape the training EEG data
-            # THINGS_EEG1 (16540, 17 x 100) / Zhang_Wamsley (16540, 16 x 100)
-            data = np.reshape(data, (data.shape[0],-1))
-        # Append individual data
-        eeg_data_train.append(data)
-        del data
-    # Average the training EEG data across subjects : (16540,16)
-    eeg_data_train = np.mean(eeg_data_train,0)
-    print('eeg_data_train shape', eeg_data_train.shape)
-    # Delete unused channel names
-    del train_ch_names
-
+    ### Feature selection ###
+    num_feat = 300
+    # Feature selection model
+    best_feat = SelectKBest(f_regression, k=num_feat).fit(feature_maps_train, 
+                                                          eeg_data_train)
+    # Transfer the training features
+    train = best_feat.transform(feature_maps_train)
+    del feature_maps_train
     ### Train the encoding model ###
-    # Train the encoding models
-    reg = LinearRegression().fit(dnn_fmaps_train['all_layers'],eeg_data_train)
-    return reg
+    reg = LinearRegression().fit(train, eeg_data_train)
+    
+    ### Load the test dream DNN feature maps ###
+    ZW_rem_dir = os.path.join(args.project_dir, 'eeg_dataset', 'dream_data', 
+                                args.test_dataset, 'REMs')
+    # Load the test DNN feature maps directory
+    dnn_test_dir = os.path.join(ZW_rem_dir, 'dnn_feature_maps', 
+                                'pca_feature_maps', args.dnn, 'pretrained-True', 
+                                'layers-all')
+    dnn_test_list = os.listdir(dnn_test_dir)
+    # Load the test DNN feature maps 
+    pred_eeg = []
+    for fmap in dnn_test_list:
+        dnn_fmaps_test = np.load(os.path.join(dnn_test_dir,fmap,
+                                ), allow_pickle=True).item()
+        # Feature selection
+        dnn_fmaps_test['all_layers'] = best_feat.transform(dnn_fmaps_test['all_layers'])
+        # Predict the EEG test data using the encoding model 
+        test = reg.predict(dnn_fmaps_test['all_layers'])
+        pred_eeg.append(test)
+        del dnn_fmaps_test['all_layers'], test
+    pred_eeg = np.concatenate(pred_eeg).ravel()
+    
+    return pred_eeg
 
 def model_ZW(args, dreams_eegs_idx, dreams_imgs_idx, crop_t):
     """The function trains the encoding model using LogisticRegression. X train 

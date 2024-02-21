@@ -14,12 +14,7 @@ import os
 import argparse
 import numpy as np
 from tqdm import tqdm
-import pingouin as pg
-from sklearn.feature_selection import RFECV
-from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import StratifiedKFold
-from sklearn.feature_selection import SelectKBest, f_regression
-from corr_func import corr_s, feature_selection
+from encoding_func import corr_ZW_spatial, feature_selection
 
 
 # =============================================================================
@@ -27,7 +22,7 @@ from corr_func import corr_s, feature_selection
 # =============================================================================
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--project_dir',default='../project_directory', type=str)
+parser.add_argument('--project_dir',default='project_directory', type=str)
 parser.add_argument('--dnn',default='alexnet',type=str)
 parser.add_argument('--test_dataset',default='Zhang_Wamsley',type=str)
 args = parser.parse_args()
@@ -94,7 +89,7 @@ ZW_rem_dir = os.path.join(args.project_dir, 'eeg_dataset', 'dream_data',
 
 REM_pred_eeg = []
 for ch in range(eeg_data_train.shape[1]):
-    pred_eeg = fs_train_test(args, dnn_fmaps_train['all_layers'], eeg_data_train[:,ch])
+    pred_eeg = feature_selection(args, dnn_fmaps_train['all_layers'], eeg_data_train[:,ch])
     REM_pred_eeg.append(pred_eeg)
     del pred_eeg
 REM_pred_eeg = np.array(REM_pred_eeg).transpose()
@@ -137,7 +132,7 @@ for e, item in enumerate(dreams_eegs_names):
 
     # Iterate over images
     for i in tqdm(range(REM_pred_eeg.shape[0]), desc=f'correlation dream'):
-        s, m = corr_s(args, REM_pred_eeg, e, i, crop_t)
+        s, m = corr_ZW_spatial(args, REM_pred_eeg, e, i, crop_t)
         corr.append(s)
         mean_corr.append(m)
     corr = np.array(corr)
@@ -151,7 +146,8 @@ for e, item in enumerate(dreams_eegs_names):
     results['times'] = times
 
     # Create the saving directory
-    save_dir = os.path.join(ZW_rem_dir, 'results', 'correlation_scores_sf')
+    save_dir = os.path.join(args.project_dir, 'results', f'{args.test_dataset}_correlation', 
+                            'REM_correlation_scores_s_with_feature_selection')
     if os.path.isdir(save_dir) == False:
         os.makedirs(save_dir)
     file_name = item[6:]
