@@ -60,15 +60,15 @@ Step 2: run the following:
 
 ### 03_validation_test
 
-* encoding_THINGS1.py (This file trains and tests the EEG encoding model on THINGS1 dataset.)
+* encoding_THINGS1.py (This file trains the EEG encoding model on THINGS EEG2 dataset and tests the EEG encoding model on THINGS1 dataset. The correlation result is plotted.)
 
-* encoding_ZW.py (This file trains and tests the EEG encoding model on Zhang & Wamsley dataset.)
+* ZW.py (This file trains the EEG encoding model and tests the EEG encoding model on Zhang & Wamsley dream dataset. The correlation result is plotted.)
 
-* corr_ZW.py (This file computes the correlation scores of dreams in ZHang & Wamsley dataset using the 'spatial correlation method'.)
+* encoding_ZW.py (This file trains the EEG encoding model on THINGS EEG2 dataset and tests the EEG encoding model on Zhang & Wamsley dataset using the 'spatial correlation method'. The correlation scores of each dream is saved.)
 
-* corr_ZW_REM.py (This file computes the correlation scores of REM dreams in ZHang & Wamsley dataset using the 'spatial correlation method'.)
+* encoding_ZW_REM.py (This file trains the EEG encoding model on THINGS EEG2 dataset and tests the EEG encoding model on REM dreams Zhang & Wamsley dataset using the 'spatial correlation method'. The correlation scores of each dream is saved.)
 
-* corr_ZW_REM_fs.py (This file computes the correlation scores of REM dreams in ZHang & Wamsley dataset using the 'spatial correlation method' with extra feature selections.)
+* corr_ZW_REM_fs.py (This file trains the EEG encoding model on THINGS EEG2 dataset and tests the EEG encoding model on REM dreams Zhang & Wamsley dataset using the 'spatial correlation method' with extra feature selections.)
 
 ### 04_plots
 

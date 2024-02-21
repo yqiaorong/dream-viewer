@@ -1,4 +1,4 @@
-"""Test the THINGS2 decoding model on Zhang & Wamsley
+"""Test the THINGS2 decoding model on Zhang & Wamsley REM dreams.
 
 Parameters
 ----------
@@ -14,8 +14,7 @@ import os
 import argparse
 import numpy as np
 from tqdm import tqdm
-from sklearn.linear_model import LinearRegression
-from corr_func import corr_s
+from encoding_func import train_model_THINGS2, corr_ZW_spatial
 
 
 # =============================================================================
@@ -23,7 +22,7 @@ from corr_func import corr_s
 # =============================================================================
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--project_dir',default='../project_directory', type=str)
+parser.add_argument('--project_dir',default='project_directory', type=str)
 parser.add_argument('--dnn',default='alexnet',type=str)
 parser.add_argument('--test_dataset',default='Zhang_Wamsley',type=str)
 args = parser.parse_args()
@@ -37,53 +36,8 @@ for key, val in vars(args).items():
 # =============================================================================
 # Train the encoding model
 # =============================================================================
-
-### Load the training DNN feature maps ###
-# Load the training DNN feature maps directory
-dnn_train_dir = os.path.join(args.project_dir, 'eeg_dataset', 'wake_data', 
-                                'THINGS_EEG2', 'dnn_feature_maps', 'pca_feature_maps', 
-                                args.dnn, 'pretrained-True', 'layers-all')
-# Load the training DNN feature maps (16540, 3000)
-dnn_fmaps_train = np.load(os.path.join(dnn_train_dir, 'pca_feature_maps_training.npy'), 
-                            allow_pickle=True).item()
-
-### Load the training EEG data ###
-# Load the THINGS2 training EEG data directory
-eeg_train_dir = os.path.join(args.project_dir, 'eeg_dataset', 'wake_data', 
-                                'THINGS_EEG2','preprocessed_data')
-# Iterate over THINGS2 subjects
-eeg_data_train = []
-for train_subj in tqdm(range(1,11), desc='THINGS2 subjects'):
-    # Load the THINGS2 training EEG data
-    data = np.load(os.path.join(eeg_train_dir,'sub-'+format(train_subj,'02'),
-                  'preprocessed_eeg_training.npy'), allow_pickle=True).item()
-    # Get the THINGS2 training channels and times
-    if train_subj == 1:
-        train_ch_names = data['ch_names']
-    else:
-        pass
-    # Average the training EEG data across repetitions (16540,17,100)
-    data = np.mean(data['preprocessed_eeg_data'], 1)
-    # Crop the training EEG data between 0.1 and 0.25s (16540,17,15)
-    data = data[:,:,30:45]
-    # Average the training EEG data across time (16540,17)
-    data = np.mean(data,axis=2)
-    # Remove the EEG data from 'POz' channel (16540,16)
-    POz_idx = train_ch_names.index('POz')
-    data = np.delete(data,POz_idx,axis=1)
-    # Append individual data
-    eeg_data_train.append(data)
-    del data
-# Average the training EEG data across subjects : (16540,16)
-eeg_data_train = np.mean(eeg_data_train,0)
-# Delete unused channel names
-del train_ch_names
-
-### Train the encoding model ###
-# Feature selection
-reg = LinearRegression().fit(dnn_fmaps_train['all_layers'], eeg_data_train)
-print(dnn_fmaps_train['all_layers'].shape)   
-# Train the encoding models                                                      
+                                                  
+reg = train_model_THINGS2(args)
 
 
 # =============================================================================
@@ -146,8 +100,8 @@ for e, item in enumerate(dreams_eegs_names):
     mean_corr = []
 
     # Iterate over images
-    for i in tqdm(range(REM_pred_eeg.shape[0]), desc=f'correlation dream'):
-        s, m = corr_s(args, REM_pred_eeg, e, i, crop_t)
+    for i in tqdm(range(REM_pred_eeg.shape[0]), desc=f'{dreams_eegs_names} correlation'):
+        s, m = corr_ZW_spatial(args, REM_pred_eeg, e, i, crop_t)
         corr.append(s)
         mean_corr.append(m)
     corr = np.array(corr)
@@ -161,7 +115,8 @@ for e, item in enumerate(dreams_eegs_names):
     results['times'] = times
 
     # Create the saving directory
-    save_dir = os.path.join(ZW_rem_dir, 'results', 'correlation_scores_s')
+    save_dir = os.path.join(args.project_dir, 'results', f'{args.test_dataset}_correlation',
+                            'REM_correlation_scores_s')
     if os.path.isdir(save_dir) == False:
         os.makedirs(save_dir)
     file_name = item[6:]
