@@ -10,6 +10,7 @@ import pandas as pd
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--project_dir', default='project_directory', type=str)
+parser.add_argument('--all_or_best', default='all', type=str)
 args = parser.parse_args()
 
 # =============================================================================
@@ -55,7 +56,7 @@ for idx, img in enumerate(img_list):
         REM_img_idx.append(idx)
 
 # Create new directory saving all REMs
-REM_dir = os.path.join(ZW_dir, 'REMs')
+REM_dir = os.path.join(ZW_dir, f'REMs_{args.all_or_best}')
 if os.path.isdir(REM_dir) == False:
     os.makedirs(REM_dir)
 
@@ -64,23 +65,24 @@ if os.path.isdir(REM_dir) == False:
 # =============================================================================
 
 # Create new directory saving all REMs images
-REM_img_dir = os.path.join(REM_dir, 'images')
-if os.path.isdir(REM_img_dir) == False:
-    os.makedirs(REM_img_dir)
+if args.all_or_best == 'all':
+    REM_img_dir = os.path.join(REM_dir, 'images')
+    if os.path.isdir(REM_img_dir) == False:
+        os.makedirs(REM_img_dir)
 
-# The dictionary storing the REM dreams and corresponding image indices
-dict = {}
-for id in REMID:
-    dict[id] = []
-    for i, img in enumerate(img_ID):
-        if img == id:
-            dict[id].append(i)
-    for idx in dict[id]:
-        source_dir = os.path.join(ZW_img_dir, img_list[idx])
-        desti_dir = os.path.join(REM_img_dir, id)
-        if os.path.isdir(desti_dir) == False:
-            os.makedirs(desti_dir)
-        shutil.copy(source_dir, desti_dir)
+    # The dictionary storing the REM dreams and corresponding image indices
+    dict = {}
+    for id in REMID:
+        dict[id] = []
+        for i, img in enumerate(img_ID):
+            if img == id:
+                dict[id].append(i)
+        for idx in dict[id]:
+            source_dir = os.path.join(ZW_img_dir, img_list[idx])
+            desti_dir = os.path.join(REM_img_dir, id)
+            if os.path.isdir(desti_dir) == False:
+                os.makedirs(desti_dir)
+            shutil.copy(source_dir, desti_dir)
 
 # =============================================================================
 # Tranfer REM preprocessed EEG data
@@ -124,4 +126,4 @@ del Reports, reports_df
 REM_df['CaseID'] = REMID
 
 # Save the REM dreams reports
-REM_df.to_excel(os.path.join(ZW_dir, 'REMs', 'REM_reports.xlsx'), index=False)
+REM_df.to_excel(os.path.join(ZW_dir, f'REMs_{args.all_or_best}', 'REM_reports.xlsx'), index=False)

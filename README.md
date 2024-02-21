@@ -52,11 +52,13 @@ Step 1: run either of followings:
 
 * alexnet_ZW.py (This file extracts dnn alexnet feature maps from Zhang & Wamsley images.)
 
-* sort_ZW_REMs.py + alexnet_ZW_REMs.py (This file extracts dnn alexnet feature maps from Zhang & Wamsley REM images.)
+* sort_ZW.py + sort_ZW_REMs.py + alexnet_ZW_REMs.py --all_or_best (This file extracts dnn alexnet feature maps from Zhang & Wamsley REM images.)
 
 Step 2: run the following: 
 
-* pca.py (This file applies StandardScaler and PCA on the full feature maps.)
+* pca.py --dataset [THINGS_EEG2, Zhang_Wamsley, ZW_REMs_all, ZW_REMs_best] 
+  
+  (This file applies StandardScaler and PCA on the full feature maps.)
 
 ### 03_validation_test
 
@@ -66,9 +68,9 @@ Step 2: run the following:
 
 * encoding_ZW.py (This file trains the EEG encoding model on THINGS EEG2 dataset and tests the EEG encoding model on Zhang & Wamsley dataset using the 'spatial correlation method'. The correlation scores of each dream is saved.)
 
-* encoding_ZW_REM.py (This file trains the EEG encoding model on THINGS EEG2 dataset and tests the EEG encoding model on REM dreams Zhang & Wamsley dataset using the 'spatial correlation method'. The correlation scores of each dream is saved.)
+* encoding_ZW_REM.py --all_or_best (This file trains the EEG encoding model on THINGS EEG2 dataset and tests the EEG encoding model on REM dreams Zhang & Wamsley dataset using the 'spatial correlation method'. The correlation scores of each dream is saved.)
 
-* encoding_ZW_REM_fs.py (This file trains the EEG encoding model on THINGS EEG2 dataset and tests the EEG encoding model on REM dreams Zhang & Wamsley dataset using the 'spatial correlation method' with extra feature selections.)
+* encoding_ZW_REM_fs.py --all_or_best (This file trains the EEG encoding model on THINGS EEG2 dataset and tests the EEG encoding model on REM dreams Zhang & Wamsley dataset using the 'spatial correlation method' with extra feature selections.)
 
 ### 04_plots
 

@@ -25,6 +25,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--project_dir',default='project_directory', type=str)
 parser.add_argument('--dnn',default='alexnet',type=str)
 parser.add_argument('--test_dataset',default='Zhang_Wamsley',type=str)
+parser.add_argument('--all_or_best', default='all', type=str)
 args = parser.parse_args()
 
 print(f'>>> Test the encoding model on Zhang & Wamsley <<<')
@@ -46,7 +47,7 @@ reg = train_model_THINGS2(args)
 
 ### Load the test dream DNN feature maps ###
 ZW_rem_dir = os.path.join(args.project_dir, 'eeg_dataset', 'dream_data', 
-                            args.test_dataset, 'REMs')
+                            args.test_dataset, f'REMs_{args.all_or_best}')
 
 # Load the test DNN feature maps directory
 dnn_test_dir = os.path.join(ZW_rem_dir, 'dnn_feature_maps', 
@@ -100,8 +101,8 @@ for e, item in enumerate(dreams_eegs_names):
     mean_corr = []
 
     # Iterate over images
-    for i in tqdm(range(REM_pred_eeg.shape[0]), desc=f'{dreams_eegs_names} correlation'):
-        s, m = corr_ZW_spatial(args, REM_pred_eeg, e, i, crop_t)
+    for i in tqdm(range(REM_pred_eeg.shape[0]), desc=f'correlation dream'):
+        s, m = corr_ZW_spatial(args, REM_pred_eeg, e, i, crop_t, REM=True)
         corr.append(s)
         mean_corr.append(m)
     corr = np.array(corr)
@@ -116,7 +117,7 @@ for e, item in enumerate(dreams_eegs_names):
 
     # Create the saving directory
     save_dir = os.path.join(args.project_dir, 'results', f'{args.test_dataset}_correlation',
-                            'REM_correlation_scores_s')
+                            f'{args.all_or_best}_REM_correlation_scores_s')
     if os.path.isdir(save_dir) == False:
         os.makedirs(save_dir)
     file_name = item[6:]

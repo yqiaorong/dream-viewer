@@ -21,7 +21,7 @@ from sklearn.decomposition import KernelPCA
 # =============================================================================
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--project_dir',default='../project_directory', type=str)
+parser.add_argument('--project_dir',default='project_directory', type=str)
 args = parser.parse_args()
 
 print(f'>>> Apply PCA and clustering on Zhang & Wamsley REM EEG <<<')
