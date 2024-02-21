@@ -44,12 +44,6 @@ The files ended with '_func.py' have no needs to be run.
 
 * ZW.py (This file preprocesses one specific subject of Zhang & Wamsley.)
 
-### 03_validation_test
-
-* encoding.py (This file trains and tests the EEG encoding model.)
-
-* corr_ZW_s.py (This file computes the correlation scores of dreams in ZHang & Wamsley dataset using the 'spatial correlation method'.)
-
 ### 02_dnn_fmaps
 
 * alexnet_THINGS.py (This file extracts dnn alexnet feature maps from THINGS images.)
@@ -59,6 +53,18 @@ The files ended with '_func.py' have no needs to be run.
 * alexnet_ZW.py (This file extracts dnn alexnet feature maps from Zhang & Wamsley REM images.)
 
 * pca.py (This file applies StandardScaler and PCA on the full feature maps.)
+
+### 03_validation_test
+
+* encoding_THINGS1.py (This file trains and tests the EEG encoding model on THINGS1 dataset.)
+
+* encoding_ZW.py (This file trains and tests the EEG encoding model on Zhang & Wamsley dataset.)
+
+* corr_ZW.py (This file computes the correlation scores of dreams in ZHang & Wamsley dataset using the 'spatial correlation method'.)
+
+* corr_ZW_REM.py (This file computes the correlation scores of REM dreams in ZHang & Wamsley dataset using the 'spatial correlation method'.)
+
+* corr_ZW_REM_fs.py (This file computes the correlation scores of REM dreams in ZHang & Wamsley dataset using the 'spatial correlation method' with extra feature selections.)
 
 ### 05_plots
 
