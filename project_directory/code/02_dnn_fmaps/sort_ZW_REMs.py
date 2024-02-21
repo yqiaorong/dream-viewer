@@ -9,7 +9,7 @@ import pandas as pd
 # =============================================================================
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--project_dir', default='../project_directory', type=str)
+parser.add_argument('--project_dir', default='project_directory', type=str)
 args = parser.parse_args()
 
 # =============================================================================

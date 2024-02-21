@@ -46,11 +46,15 @@ The files ended with '_func.py' have no needs to be run.
 
 ### 02_dnn_fmaps
 
+Step 1: run either of followings:
+
 * alexnet_THINGS.py (This file extracts dnn alexnet feature maps from THINGS images.)
 
 * alexnet_ZW.py (This file extracts dnn alexnet feature maps from Zhang & Wamsley images.)
 
-* alexnet_ZW.py (This file extracts dnn alexnet feature maps from Zhang & Wamsley REM images.)
+* sort_ZW_REMs.py + alexnet_ZW_REMs.py (This file extracts dnn alexnet feature maps from Zhang & Wamsley REM images.)
+
+Step 2: run the following: 
 
 * pca.py (This file applies StandardScaler and PCA on the full feature maps.)
 
@@ -66,15 +70,21 @@ The files ended with '_func.py' have no needs to be run.
 
 * corr_ZW_REM_fs.py (This file computes the correlation scores of REM dreams in ZHang & Wamsley dataset using the 'spatial correlation method' with extra feature selections.)
 
-### 05_plots
+### 04_plots
 
-* corr_plot_s.py (This file plots the correlation scores for individual dream.)
+* plot.py (This file plots the correlation scores for individual dream.)
 
-* RDMs.py (This file plots the RDMs of dreams with feature maps.)
+* plot_hist.py (This file plots the histogram of correlation scores for all dream.)
 
-* RDMs_REM.py (This file plots the RDMs of REM dreams with feature maps.)
+* plot_RDMs.py (This file plots the RDMs of dreams with feature maps.)
 
-### 06_ZW
+* plot_RDMs_REM.py (This file plots the RDMs of REM dreams with feature maps.)
+
+* plot_stages.py (This file plots the statistical decoding results from all dreams with different sleep stages.)
+
+* plot_meanall.py (This file plots the statistical decoding results from all dreams.)
+
+### 05_ZW
 
 No needs to run the following scripts.
 

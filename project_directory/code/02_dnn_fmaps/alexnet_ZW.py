@@ -26,10 +26,11 @@ from PIL import Image
 # =============================================================================
 parser = argparse.ArgumentParser()
 parser.add_argument('--pretrained', default=True, type=bool)
-parser.add_argument('--project_dir', default='../project_directory', type=str)
+parser.add_argument('--REM', default='no', type=str)
+parser.add_argument('--project_dir', default='project_directory', type=str)
 args = parser.parse_args()
 
-print('Extract feature maps AlexNet <<<')
+print('Extract Zhang & Wamsley dream images feature maps AlexNet <<<')
 print('\nInput arguments:')
 for key, val in vars(args).items():
 	print('{:16} {}'.format(key, val))
@@ -99,7 +100,7 @@ centre_crop = trn.Compose([
 
 # The image directory
 img_dir = os.path.join(args.project_dir,'eeg_dataset','dream_data',
-						   'Zhang_Wamsley','images')
+						'Zhang_Wamsley','images')
 # The list of images
 image_list = []
 for root, dirs, files in os.walk(img_dir):
