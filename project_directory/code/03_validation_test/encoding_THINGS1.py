@@ -10,6 +10,7 @@ test_dataset : str
     Used test dataset ('THINGS_EEG1')
 """
 
+import os
 import argparse
 import numpy as np
 import pingouin as pg
@@ -22,7 +23,7 @@ from encoding_func import train_model_THINGS, test_model_THINGS
 # Input arguments
 # =============================================================================
 parser = argparse.ArgumentParser()
-parser.add_argument('--project_dir',default='../project_directory', type=str)
+parser.add_argument('--project_dir',default='project_directory', type=str)
 parser.add_argument('--dnn',default='alexnet',type=str)
 parser.add_argument('--test_dataset',default='THINGS_EEG1',type=str)
 args = parser.parse_args()
@@ -55,6 +56,11 @@ for i, test_subj in enumerate(tqdm(test_subjs, desc='THINGS1 subjects')):
 # =============================================================================
 # Plot the correlation results
 # =============================================================================
+    
+# Create the saving directory
+save_dir = os.path.join(args.project_dir, 'results', f'{args.test_dataset}_validation_test')
+if os.path.isdir(save_dir) == False:
+    os.makedirs(save_dir)
 
 ### All subjects ###
 plt.figure(1)
@@ -70,8 +76,9 @@ plt.xlabel('Time (s)')
 plt.xlim(left=-.2, right=.8)
 plt.ylabel('Pearson\'s $r$')
 plt.ylim(bottom=-.1, top=.3)
-# plt.title(f'Encoding accuracy (alexnet)')
+plt.title(f'Encoding accuracy on {args.test_dataset} ({args.dnn})')
 plt.legend(loc='best')
+plt.savefig(os.path.join(save_dir, f'Encoding accuracy on {args.test_dataset} ({args.dnn}).jpg'))
 
 ### Average with confidence interval ###
 # Set random seed for reproducible results
@@ -92,7 +99,6 @@ plt.xlabel('Time (s)')
 plt.xlim(left=-.2, right=.8)
 plt.ylabel('Pearson\'s $r$')
 plt.ylim(bottom=-.05, top=.1)
-plt.title(f'Encoding accuracy on THINGS1 {args.dnn})')
+plt.title(f'Averaged ncoding accuracy on {args.test_dataset} ({args.dnn})')
 plt.legend(loc='best')
-
-plt.show()
+plt.savefig(os.path.join(save_dir, f'Averaged encoding accuracy on {args.test_dataset} ({args.dnn}).jpg'))
