@@ -1,5 +1,5 @@
 def train_model_THINGS2(args):
-    """The function trains the encoding model using LogisticRegression. X train 
+    """The function trains the encoding model using LinearRegression. X train 
     is THINGS2 dnn feature maps and Y train is the real THINGS EEG2 training 
     data.
     
@@ -250,7 +250,7 @@ def feature_selection(args, feature_maps_train, eeg_data_train):
     return pred_eeg
 
 def model_ZW(args, dreams_eegs_idx, dreams_imgs_idx, crop_t):
-    """The function trains the encoding model using LogisticRegression. X train 
+    """The function trains the encoding model using LinearRegression. X train 
     is the partial Zhang_Wamsley dream image feature maps and Y train is the partial
     Zhang_Wamsley dream real EEG data; and uses the model to predict the test EEG data.
     
