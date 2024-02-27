@@ -185,7 +185,7 @@ def corr_ZW_spatial(args, pred_eeg_data_test, eeg_idx, img_idx, crop_t, REM=Fals
     # Compute the correlation scores
     for t in range(num_t):
         corr_score[t] = corr(pred_eeg_data_test[img_idx], eeg_data_test[:,t])[0]
-    # Compute the mean correlation score
+    # Compute the time average correlation score
     mean_score = np.mean(corr_score)
 
     ### Output ###
