@@ -4,7 +4,6 @@ import numpy as np
 from matplotlib import pyplot as plt
 from sklearn.preprocessing import normalize
 
-
 # =============================================================================
 # Input arguments
 # =============================================================================
@@ -89,8 +88,6 @@ plt.ylabel('Dreams')
 plt.title(f'full unnormalized REMs_{args.all_or_best} RDMs')
 fig.tight_layout()
 plt.savefig(os.path.join(save_dir, f'full unnormalized REMs_{args.all_or_best} RDMs'))
-
-
 
 # =============================================================================
 # Plot the max RDMs
