@@ -100,7 +100,7 @@ for e, item in enumerate(dreams_eegs_names):
     # The correlation scores (all images)
     mean_corr = []
 
-    # Iterate over images
+    # Iterate over dream images
     for i in tqdm(range(REM_pred_eeg.shape[0]), desc=f'correlation dream'):
         s, m = corr_ZW_spatial(args, REM_pred_eeg, e, i, crop_t, REM=True)
         corr.append(s)
