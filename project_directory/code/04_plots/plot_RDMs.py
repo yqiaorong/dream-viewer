@@ -65,7 +65,7 @@ df = pd.read_excel('project_directory/results/Zhang_Wamsley_correlation/df.xlsx'
 non_nah_elements = [i for i in df['number_of_images'] if i != 'nah' and i != '-']
 
 fig = plt.figure(figsize=(10, 4))
-im = plt.imshow(RDMs, cmap='viridis',
+im = plt.imshow(RDMs, cmap='Purples',
 				extent=[0, len(dreams_imgs), 0, len(dreams_corrs)], 
                 origin='lower', aspect='auto')
 cbar = plt.colorbar(im)
@@ -100,7 +100,7 @@ fig.tight_layout()
 # Plot the max RDMs
 # =============================================================================
 
-fig = plt.figure(figsize=(8, 8))
+fig = plt.figure(figsize=(8, 6.5))
 
 max_RDMs = np.empty((len(dreams_corrs), len(dreams_corrs)))
 for v in range(len(dreams_corrs)):
@@ -118,7 +118,7 @@ for v in range(len(dreams_corrs)):
 # Normalization
 norm_max_RDMs = normalize(max_RDMs)
 
-im = plt.imshow(norm_max_RDMs, cmap='viridis',
+im = plt.imshow(norm_max_RDMs, cmap='Purples',
 				extent=[0, len(dreams_corrs), 0, len(dreams_corrs)], 
                 origin='lower', aspect='auto')
 cbar = plt.colorbar(im)
@@ -128,7 +128,7 @@ plt.xlim([0,len(dreams_corrs)])
 plt.ylim([0,len(dreams_corrs)])
 plt.xlabel('Images')
 plt.ylabel('Dreams')
-plt.title(f'max normalized RDMs')
+plt.title(f'RDMs of real dream EEG and synthesize dream EEG')
 plt.savefig(os.path.join(save_dir, 'max normalized RDMs'))
 fig.tight_layout()
 plt.show()

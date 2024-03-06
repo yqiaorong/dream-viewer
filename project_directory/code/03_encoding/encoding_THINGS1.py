@@ -113,15 +113,15 @@ plt.plot([-.2, .8], [0, 0], 'k--', [0, 0], [-1, 1], 'k--')
 for i in range(len(times)):
     ci[:,i] = pg.compute_bootci(tot_accuracy[:,i], func='mean', seed=seed)
 # Plot the results with confidence interval
-plt.plot(times, np.mean(tot_accuracy,0), color='salmon', 
-         label='correlation mean scores with 95 \% confidence interval')
-plt.fill_between(times, np.mean(tot_accuracy,0), ci[0], color='salmon', alpha=0.2)
-plt.fill_between(times, np.mean(tot_accuracy,0), ci[1], color='salmon', alpha=0.2)
+plt.plot(times, np.mean(tot_accuracy,0), color='mediumpurple', 
+         label='correlation mean scores with 95% confidence interval')
+plt.fill_between(times, np.mean(tot_accuracy,0), ci[0], color='mediumpurple', alpha=0.2)
+plt.fill_between(times, np.mean(tot_accuracy,0), ci[1], color='mediumpurple', alpha=0.2)
 plt.xlabel('Time (s)')
 plt.xlim(left=-.2, right=.8)
 plt.ylabel('Pearson\'s $r$')
 plt.ylim(bottom=-.05, top=.1)
-plt.title(f'Averaged ncoding accuracy on {args.test_dataset} ({args.dnn})')
+plt.title(f'Averaged encoding accuracy on {args.test_dataset} ({args.dnn})')
 plt.legend(loc='best')
 plt.savefig(os.path.join(save_dir, 
                          f'Averaged encoding accuracy on {args.test_dataset} ({args.dnn}).jpg'))

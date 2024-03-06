@@ -102,12 +102,19 @@ save_dir = os.path.join(args.project_dir, 'results', f'{args.test_dataset}_corre
 if os.path.isdir(save_dir) == False:
     os.makedirs(save_dir)
 
-colours = ['firebrick', 'salmon', 'orange', 'gold', 'palegreen', 'yellowgreen',
-           'forestgreen', 'lightskyblue', 'cornflowerblue', 'mediumpurple', 'hotpink' ]
+# colours = ['firebrick', 'salmon', 'orange', 'gold', 'palegreen', 'yellowgreen',
+#            'forestgreen', 'lightskyblue', 'cornflowerblue', 'mediumpurple', 'hotpink' ]
+colours = [ 'mediumpurple',  'mediumpurple', 'yellowgreen',  'mediumpurple',  'mediumpurple', 'yellowgreen',
+            'mediumpurple',  'mediumpurple',  'mediumpurple', 'mediumpurple',  'mediumpurple' ]
 
 fig = plt.figure(figsize=(6, 6))
-plt.title(f'{args.all_or_best}_REM dreams clusters')
+plt.title(f'REM dreams clusters')
 for i, name in enumerate(ZW_eeg_list):
-    plt.scatter(pca_eegs[i,0], pca_eegs[i,1], color=colours[i], label=name[6:-4]+'_'+str(i))
-plt.legend()
+    if i == 0:
+        plt.scatter(pca_eegs[i,0], pca_eegs[i,1], color=colours[i], label='dreams with interactions with people')
+    elif i == 2:
+        plt.scatter(pca_eegs[i,0], pca_eegs[i,1], color=colours[i], label='dreams with on interactions with people')
+    else:
+        plt.scatter(pca_eegs[i,0], pca_eegs[i,1], color=colours[i])
+plt.legend(loc='best')
 plt.savefig(os.path.join(save_dir, f'{args.all_or_best}_REM dreams clusters'))

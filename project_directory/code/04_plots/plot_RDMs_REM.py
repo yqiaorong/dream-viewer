@@ -69,7 +69,7 @@ if os.path.isdir(save_dir) == False:
 # =============================================================================
 
 fig = plt.figure(figsize=(10, 3))
-im = plt.imshow(RDMs, cmap='viridis',
+im = plt.imshow(RDMs, cmap='Purples',
 				extent=[0, RDMs.shape[1], 0, RDMs.shape[0]], 
                 origin='lower', aspect='auto')
 cbar = plt.colorbar(im)
@@ -124,7 +124,7 @@ plt.savefig(os.path.join(save_dir, f'max unnormalized REMs_{args.all_or_best} RD
 
 # Plot normalized maximum RDMs
 fig = plt.figure(figsize=(6, 5))
-im = plt.imshow(norm_max_RDMs, cmap='viridis',
+im = plt.imshow(norm_max_RDMs, cmap='Purples',
 				extent=[0, RDMs.shape[0], 0, RDMs.shape[0]], 
                 origin='lower', aspect='auto')
 cbar = plt.colorbar(im)
@@ -134,6 +134,6 @@ plt.xlim([0,RDMs.shape[0]])
 plt.ylim([0,RDMs.shape[0]])
 plt.xlabel('Images')
 plt.ylabel('Dreams')
-plt.title(f'max normalized REMs_{args.all_or_best} RDMs')
+plt.title(f'RDMs of real REM dream EEG and synthesize REM dream EEG')
 fig.tight_layout()
 plt.savefig(os.path.join(save_dir, f'max normalized REMs_{args.all_or_best} RDMs'))
