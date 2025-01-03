@@ -21,9 +21,10 @@ from sklearn.decomposition import KernelPCA
 # =============================================================================
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--project_dir',default='project_directory', type=str)
+parser.add_argument('--project_dir',default='', type=str)
 parser.add_argument('--test_dataset',default='Zhang_Wamsley',type=str)
-parser.add_argument('--all_or_best', default='all', type=str)
+parser.add_argument('--all_or_REM', default='all', type=str) # [all / REMs_all / REMs_best]
+parser.add_argument('--adjust', default=False, type=bool) 
 args = parser.parse_args()
 
 print(f'>>> Apply PCA and clustering on Zhang & Wamsley REM EEG <<<')
@@ -37,8 +38,16 @@ for key, val in vars(args).items():
 # =============================================================================
 
 # Load the directory
-ZW_eeg_dir = os.path.join(args.project_dir, 'eeg_dataset', 'dream_data', 
-                        'Zhang_Wamsley', f'REMs_{args.all_or_best}', 'preprocessed_data')
+# -----------------------------------------------------------------------------
+# 1. REM only
+if args.all_or_REM == 'REMs_all' or args.all_or_REM == 'REMs_best': 
+    ZW_eeg_dir = os.path.join(args.project_dir, 'eeg_dataset', 'dream_data', 
+                            'Zhang_Wamsley', args.all_or_REM, 'preprocessed_data')
+# 2. REM and non-REM
+elif args.all_or_REM == 'all': 
+    ZW_eeg_dir = os.path.join(args.project_dir, 'eeg_dataset', 'dream_data', 
+                        'Zhang_Wamsley', 'preprocessed_data')
+# -----------------------------------------------------------------------------
 ZW_eeg_list = os.listdir(ZW_eeg_dir)
 
 # Standardize the data
@@ -97,24 +106,34 @@ print(kmeans.labels_)
 # =============================================================================
 
 # Create save directory
-save_dir = os.path.join(args.project_dir, 'results', f'{args.test_dataset}_correlation',
-                            f'{args.all_or_best}_REMs_correlation_plots_s')
+save_dir = os.path.join(args.project_dir, f'results/{args.test_dataset}_correlation/clusters')
 if os.path.isdir(save_dir) == False:
     os.makedirs(save_dir)
 
-# colours = ['firebrick', 'salmon', 'orange', 'gold', 'palegreen', 'yellowgreen',
-#            'forestgreen', 'lightskyblue', 'cornflowerblue', 'mediumpurple', 'hotpink' ]
-colours = [ 'mediumpurple',  'mediumpurple', 'yellowgreen',  'mediumpurple',  'mediumpurple', 'yellowgreen',
-            'mediumpurple',  'mediumpurple',  'mediumpurple', 'mediumpurple',  'mediumpurple' ]
+# colours
+# -----------------------------------------------------------------------------
+colours = [ 'mediumpurple', 'yellowgreen']
+# label REMs from all
+REM_dreams_list = os.listdir('eeg_dataset/dream_data/Zhang_Wamsley/REMs_all/preprocessed_data')
+REM_colours = ['purple', 'green']
+# -----------------------------------------------------------------------------
 
 fig = plt.figure(figsize=(6, 6))
-plt.title(f'REM dreams clusters')
+plt.title(f'{args.all_or_REM} dreams clusters')
+plt.xlim([-0.5, 0.7])
+plt.ylim([-0.5, 0.7])
 for i, name in enumerate(ZW_eeg_list):
-    if i == 0:
-        plt.scatter(pca_eegs[i,0], pca_eegs[i,1], color=colours[i], label='dreams with interactions with people')
-    elif i == 2:
-        plt.scatter(pca_eegs[i,0], pca_eegs[i,1], color=colours[i], label='dreams with on interactions with people')
+    if args.all_or_REM == 'REMs_all' or args.all_or_REM == 'REMs_best': 
+        # adjust color with dream contents
+        if args.adjust == True: 
+            if i == 2 or i == 5:
+                plt.scatter(pca_eegs[i,0], pca_eegs[i,1], color=colours[1])
+            else:
+                plt.scatter(pca_eegs[i,0], pca_eegs[i,1], color=colours[0])
     else:
-        plt.scatter(pca_eegs[i,0], pca_eegs[i,1], color=colours[i])
-plt.legend(loc='best')
-plt.savefig(os.path.join(save_dir, f'{args.all_or_best}_REM dreams clusters'))
+        if name in REM_dreams_list:
+            plt.scatter(pca_eegs[i,0], pca_eegs[i,1], color=REM_colours[kmeans.labels_[i]])
+        else:
+            plt.scatter(pca_eegs[i,0], pca_eegs[i,1], color=colours[kmeans.labels_[i]])
+# plt.legend(loc='best')
+plt.savefig(os.path.join(save_dir, f'{args.all_or_REM} dreams clusters'))

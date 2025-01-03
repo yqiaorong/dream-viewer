@@ -87,7 +87,8 @@ plt.xlabel('Images')
 plt.ylabel('Dreams')
 plt.title(f'full unnormalized REMs_{args.all_or_best} RDMs')
 fig.tight_layout()
-plt.savefig(os.path.join(save_dir, f'full unnormalized REMs_{args.all_or_best} RDMs'))
+plt.savefig(os.path.join(save_dir, f'full unnormalized REMs_{args.all_or_best} RDMs'), 
+            transparent=True)
 
 # =============================================================================
 # Plot the max RDMs
@@ -120,7 +121,8 @@ plt.xlabel('Images')
 plt.ylabel('Dreams')
 plt.title(f'max unnormalized REMs_{args.all_or_best} RDMs')
 fig.tight_layout()
-plt.savefig(os.path.join(save_dir, f'max unnormalized REMs_{args.all_or_best} RDMs'))
+plt.savefig(os.path.join(save_dir, f'max unnormalized REMs_{args.all_or_best} RDMs'), 
+            transparent=True)
 
 # Plot normalized maximum RDMs
 fig = plt.figure(figsize=(6, 5))
@@ -136,4 +138,5 @@ plt.xlabel('Images')
 plt.ylabel('Dreams')
 plt.title(f'RDMs of real REM dream EEG and synthesize REM dream EEG')
 fig.tight_layout()
-plt.savefig(os.path.join(save_dir, f'max normalized REMs_{args.all_or_best} RDMs'))
+plt.savefig(os.path.join(save_dir, f'max normalized REMs_{args.all_or_best} RDMs'), 
+            transparent=True)
